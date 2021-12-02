@@ -19,12 +19,14 @@ export const FEED_QUERY = gql`
         postedBy {
           id
           name
+          group
         }
         votes {
           id
           user {
             id
             name
+            group
           }
         }
         createdAt

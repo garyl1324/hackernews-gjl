@@ -1,82 +1,71 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { APP_SECRET, getUserId } = require('../utils');
-function post(parent, args, context, info) {
-  const { userId } = context;
-  const newLink = context.prisma.link.create({
-    data: {
-      url: args.url,
-      description: args.description,
-      postedBy: { connect: { id: userId } }
-    }
-  });
-  context.pubsub.publish('NEW_LINK', newLink);
-  return newLink;
-}
-async function signup(parent, args, context, info) {
-  const password = await bcrypt.hash(args.password, 10);
-  const user = await context.prisma.user.create({
-    data: { ...args, password }
-  });
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
-  return {
-    token,
-    user
-  };
-}
-async function login(parent, args, context, info) {
-  const user = await context.prisma.user.findUnique({
-    where: { email: args.email }
-  });
-  if (!user) {
-    throw new Error('No such user found');
-  }
-  const valid = await bcrypt.compare(
-    args.password,
-    user.password
-  );
-  if (!valid) {
-    throw new Error('Invalid password');
-  }
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
-  return {
-    token,
-    user
-  };
-}
-async function vote(parent, args, context, info) {
-  const { userId } = context;
-  const vote = await context.prisma.vote.findUnique({
-    where: {
-      linkId_userId: {
-        linkId: Number(args.linkId),
-        userId: userId
+import React, { Component } from 'react'
+import { AUTH_TOKEN } from '../constants'
+import { timeDifferenceForDate } from '../utils'
+import { Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
+const VOTE_MUTATION = gql`
+  mutation VoteMutation($linkId: ID!) {
+    vote(linkId: $linkId) {
+      id
+      link {
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+      user {
+        id
       }
     }
-  });
-
- 
-  if (!Boolean(vote)) {
-    const newVote = context.prisma.vote.create({
-      data: {
-        user: { connect: { id: userId } },
-        link: { connect: { id: Number(args.linkId) } }
-      }
-    });
-    context.pubsub.publish('NEW_VOTE', newVote);
-
-    return newVote;
-    // throw new Error(
-    //   `Already voted for link: ${args.linkId}`
-    // );
   }
+`
 
- 
+class Link extends Component {
+  render() {
+    const authToken = localStorage.getItem(AUTH_TOKEN)
+    return (
+      <div className="flex mt2 items-start">
+        <div className="flex items-center">
+  <span className="gray">{this.props.index + 1}.</span>
+  {authToken && (
+    <Mutation
+    mutation={VOTE_MUTATION}
+    variables={{ linkId: this.props.link.id }}
+    update={(store, { data: { vote } }) =>
+      this.props.updateStoreAfterVote(store, vote, this.props.link.id)
+    }
+    >
+    {voteMutation => (
+      <div className="ml1 gray f11" onClick={voteMutation}>
+        ▲
+      </div>
+    )}
+    </Mutation>  
+  )}
+</div>
 
-module.exports = {
-  post,
-  signup,
-  login,
-  vote
-};
+        <div className="ml1">
+          <div>
+          <a href={this.props.link.url} target="_blank">{this.props.link.description}</a>
+          </div>
+          <div className="f6 lh-copy gray">
+            {this.props.link.votes.length} votes | by{' '}
+            {this.props.link.postedBy
+              ? this.props.link.postedBy.name
+              : 'Unknown'}{' '}
+            {timeDifferenceForDate(this.props.link.createdAt)}  {' '}
+  {/* below ternary operator check if any votes, shows last voter */}
+            {this.props.link.votes[0] 
+              ? ' ____ last voter: '+this.props.link.votes[0].user.name
+              : ' '}
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
 }
+
+export default Link
