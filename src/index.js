@@ -11,6 +11,8 @@ import { setContext } from 'apollo-link-context'
 import { BrowserRouter } from 'react-router-dom'
 import { AUTH_TOKEN } from './constants'
 
+const name = 'Clementine';
+
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000'
 })
@@ -40,4 +42,9 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root')
 )
+/*
+ReactDOM.render(
+  <h1 className="hello">My name is {name}!</h1>,
+  document.getElementById('root')
+);*/
 //registerServiceWorker()

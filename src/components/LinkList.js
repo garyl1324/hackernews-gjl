@@ -24,6 +24,7 @@ export const FEED_QUERY = gql`
           id
           user {
             id
+            name
           }
         }
         createdAt
@@ -35,6 +36,8 @@ export const FEED_QUERY = gql`
 
 const getLinksToRender = (isNewPage, data) => {
   if (isNewPage) {
+    return data.feed.links;
+  } else {
     return data.feed.links;
   }
   const rankedLinks = data.feed.links.slice();
