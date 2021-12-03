@@ -4,16 +4,16 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
-    signup(email: $email, password: $password, name: $name) {
+  mutation SignupMutation($email: String!, $password: String!, $name: String!, $age: String!, $age: String!) {
+    signup(email: $email, password: $password, name: $name, age: $age) {
       token
     }
   }
 `
 
 const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+  mutation LoginMutation($email: String!, $password: String!, $age: String!) {
+    login(email: $email, password: $password, age: $age) {
       token
     }
   }
@@ -25,10 +25,11 @@ class Login extends Component {
     email: '',
     password: '',
     name: '',
+    age: '',
   }
 
   render() {
-    const { login, email, password, name } = this.state
+    const { login, email, password, name, age } = this.state
     return (
       <div>
         <h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>
@@ -47,12 +48,21 @@ class Login extends Component {
             type="text"
             placeholder="Your email address"
           />
+          {!login && (
+            <input
+            value={age}
+            onChange={e => this.setState({ age: e.target.value })}
+            type="age"
+            placeholder="Your age"
+            />
+          )}
           <input
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
             type="password"
             placeholder="Choose a safe password"
           />
+          
         </div>
         <div className="flex mt3">
   <Mutation
