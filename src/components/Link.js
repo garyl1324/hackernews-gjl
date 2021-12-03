@@ -58,11 +58,8 @@ class Link extends Component {
               ? this.props.link.votes[0].user.name 
               : 'hi'}{''} | by{' '} */}
             {this.props.link.postedBy
-              ? ' '+this.props.link.postedBy.name
+              ? ' '+this.props.link.postedBy.name+' (age: '+this.props.link.postedBy.age+') '
               : 'Unknown'}{' '}
-              {this.props.link.votes[0]
-              ? '(age: '+this.props.link.postedBy.age+') '
-              : ''}
             {timeDifferenceForDate(this.props.link.createdAt)}
             {this.props.link.votes[0]
               ? '. first voter: '+this.props.link.votes[0].user.name + ' last voter: '+this.props.link.votes[this.props.link.votes.length-1].user.name
