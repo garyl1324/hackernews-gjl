@@ -20,6 +20,7 @@ export const FEED_QUERY = gql`
           id
           name
           group
+          age
         }
         votes {
           id
@@ -27,6 +28,7 @@ export const FEED_QUERY = gql`
             id
             name
             group
+            age
           }
         }
         createdAt
