@@ -62,7 +62,7 @@ class Link extends Component {
               : 'Unknown'}{' '}
             {timeDifferenceForDate(this.props.link.createdAt)}
             {this.props.link.votes[0]
-              ? '. first voter: '+this.props.link.votes[0].user.name + ' last voter: '+this.props.link.votes[this.props.link.votes.length-1].user.name
+              ? '. first voter: '+this.props.link.votes[0].user.name+' (age: '+this.props.link.votes[0].user.age+') ' + 'last voter: '+this.props.link.votes[this.props.link.votes.length-1].user.name+' (age: '+this.props.link.votes[this.props.link.votes.length-1].user.age+') ' 
               : ''}
             {/* below ternary operator is new */}
             {/* {this.props.link.votes[0]
