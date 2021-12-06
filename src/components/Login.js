@@ -12,8 +12,8 @@ const SIGNUP_MUTATION = gql`
 `
 
 const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!, $age: String!) {
-    login(email: $email, password: $password, age: $age) {
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
       token
     }
   }
@@ -25,7 +25,6 @@ class Login extends Component {
     email: '',
     password: '',
     name: '',
-    age: '',
   }
 
   render() {
@@ -48,14 +47,7 @@ class Login extends Component {
             type="text"
             placeholder="Your email address"
           />
-          {/* {!login && (
-            <input
-            value={age}
-            onChange={e => this.setState({ age: e.target.value })}
-            type="age"
-            placeholder="Your age"
-            />
-          )} */}
+          
           <input
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
