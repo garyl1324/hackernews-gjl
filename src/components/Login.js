@@ -4,8 +4,8 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
 const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($email: String!, $password: String!, $name: String!, $age: String!, $age: String!) {
-    signup(email: $email, password: $password, name: $name, age: $age) {
+  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
+    signup(email: $email, password: $password, name: $name) {
       token
     }
   }
@@ -29,7 +29,7 @@ class Login extends Component {
   }
 
   render() {
-    const { login, email, password, name, age } = this.state
+    const { login, email, password, name,} = this.state
     return (
       <div>
         <h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>
@@ -48,14 +48,14 @@ class Login extends Component {
             type="text"
             placeholder="Your email address"
           />
-          {!login && (
+          {/* {!login && (
             <input
             value={age}
             onChange={e => this.setState({ age: e.target.value })}
             type="age"
             placeholder="Your age"
             />
-          )}
+          )} */}
           <input
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
