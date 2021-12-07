@@ -1,13 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { APP_SECRET } = require('../utils');
+const { APP_SECRET, getUserId } = require('../utils');
 
-async function post(parent, args, context, info) {
+function post(parent, args, context, info) {
   const { userId } = context;
 
-  const newLink = await context.prisma.link.create({
+  const newLink = context.prisma.link.create({
     data: {
       url: args.url,
+      tag: args.tag,
       description: args.description,
       postedBy: { connect: { id: userId } }
     }
@@ -74,22 +75,12 @@ async function vote(parent, args, context, info) {
       }
     });
     context.pubsub.publish('NEW_VOTE', newVote);
-
+  
     return newVote;
     // throw new Error(
     //   `Already voted for link: ${args.linkId}`
     // );
   }
-
-  const newVote = context.prisma.vote.create({
-    data: {
-      user: { connect: { id: userId } },
-      link: { connect: { id: Number(args.linkId) } }
-    }
-  });
-  context.pubsub.publish('NEW_VOTE', newVote);
-
-  return newVote;
 }
 
 module.exports = {

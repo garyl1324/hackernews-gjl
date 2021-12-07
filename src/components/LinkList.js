@@ -19,7 +19,6 @@ export const FEED_QUERY = gql`
         postedBy {
           id
           name
-
         }
         votes {
           id
